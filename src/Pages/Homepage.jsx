@@ -5,8 +5,7 @@ const Homepage = () => {
     return (
         <Box>
             <h1>Welcome to the Homepage</h1>
-            <p>This is the homepage of our application.</p>
-            
+            <p>This is the main page of the application.</p>
         </Box>
     );
 };
