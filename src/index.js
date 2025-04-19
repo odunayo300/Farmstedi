@@ -8,8 +8,9 @@ import ContactUs from './Pages/ContactUs';
 import LogIn from './Pages/LogIn';
 import Notifications from './Pages/Notifications';
 import SignUp from './Pages/SignUp';
-import MyPlants from './Pages/MyPlants';
+import MyPlants from './Pages/MyPlants'
 import Layout from './Components/HomepageComponent/Layout';
+import ForgotPassword from './Pages/ForgotPasswor
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,36 @@ const router = createBrowserRouter([
     ],
   },
 ]);
+  {
+    path: "/about",
+    element: <AboutUs/>,
+  },
+  {
+    ContactUs: "/contact",
+    element: <ContactUs/>,
+  },
+  {
+    LogIn: "/login",
+    element: <LogIn/>,
+  },
+  {
+    SignUp: "/signup",
+    element: <SignUp/>,
+  },
+  {
+    Notifications: "/notifications",
+    element: <Notifications/>,
+  },
+  {
+    MyPlants: "/myplants",
+    element: <MyPlants/>,
+  },
+  {
+    path: "/forgot-password", 
+    element: <ForgotPassword />,
+  }
+ ]);
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
