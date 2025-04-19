@@ -4,16 +4,16 @@ import {
   Button,
   TextField,
   Typography,
-  Link,
+  Link as MuiLink,
   Paper,
 } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
 
-const SignIn = () => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
-    
     console.log("Logging in with:", { email, password });
   };
 
@@ -87,13 +87,14 @@ const SignIn = () => {
         </Box>
 
         <Box textAlign="right" mb={4}>
-          <Link
-            href="#"
+          <MuiLink
+            component={RouterLink}
+            to="/forgot-password"
             underline="none"
             sx={{ fontSize: "0.875rem", color: "error.main" }}
           >
             Forgot Password?
-          </Link>
+          </MuiLink>
         </Box>
 
         <Button
@@ -119,4 +120,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default Login;
