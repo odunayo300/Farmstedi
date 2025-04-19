@@ -9,6 +9,7 @@ import LogIn from './Pages/LogIn';
 import Notifications from './Pages/Notifications';
 import SignUp from './Pages/SignUp';
 import MyPlants from './Pages/MyPlants';
+import ForgotPassword from './Pages/ForgotPassword';
 
 const router = createBrowserRouter([
 
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
   {
     MyPlants: "/myplants",
     element: <MyPlants/>,
+  },
+  {
+    path: "/forgot-password", 
+    element: <ForgotPassword />,
   }
  ]);
 
