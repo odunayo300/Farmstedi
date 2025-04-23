@@ -8,7 +8,7 @@ import {
   Stack,
   Box,
 } from "@mui/material";
-import CustomButton from "./CustomButton";
+import CustomButton from "../Components/CustomButton";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -27,7 +27,7 @@ function ForgotPassword() {
   const renderForm = () => {
     if (status === "success") {
       return (
-        <Card sx={{ maxWidth: 400, mx: "auto", mt: 8, p: 2 }}>
+        <Card sx={{ maxWidth: 400, mx: "auto", mt:"auto", p: 2 }}>
           <CardContent>
             <Stack spacing={2} >
               <Typography variant="h5" textAlign="center">Reset Link Sent</Typography>

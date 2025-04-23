@@ -89,7 +89,7 @@ const Login = () => {
         <Box textAlign="right" mb={4}>
           <MuiLink
             component={RouterLink}
-            to="/forgot-password"
+            to="/forgotPassword"
             underline="none"
             sx={{ fontSize: "0.875rem", color: "error.main" }}
           >

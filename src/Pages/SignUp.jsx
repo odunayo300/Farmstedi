@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Box, Grid } from "@mui/material";
-import CreateAccountForm from "../components/Signup/CreateAccountForm";
-import OTPVerification from "../components/Signup/OTPVerification";
+import { Box, Grid} from "@mui/material";
+import CreateAccountForm from "../Components/Signup/CreateAccountForm";
+import OTPVerification from "../Components/Signup/OTPVerification";
 
 
 const SignUp = () => {

@@ -3,6 +3,7 @@ import { AppBar, Toolbar, Button, Typography, Box, IconButton, Container, CssBas
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link, useLocation } from 'react-router-dom';
 
+
 export default function Navbar({ toggleDrawer }) {
   const location = useLocation(); // Get the current path
 
@@ -17,9 +18,9 @@ export default function Navbar({ toggleDrawer }) {
   ];
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" sx={{ position: 'absolute', top: 10, left: 0, right: 0, zIndex: 10 }}>
       <CssBaseline />
-      <AppBar position="static" style={{ boxShadow: 'none', backgroundColor: 'transparent', marginTop: '20px' }}>
+      <AppBar position="static" style={{ boxShadow: 'none', backgroundColor: 'transparent',  }}>
         <Toolbar style={{ justifyContent: 'space-between', position: 'relative' }}>
           {/* Logo */}
           <Typography variant="h6" style={{ color: '#68C34C', fontWeight: 'bold' }}>
@@ -33,10 +34,11 @@ export default function Navbar({ toggleDrawer }) {
               top: '50%',
               left: '50%',
               transform: 'translate(-50%, -50%)',
-              display: { xs: 'none', sm: 'flex' },
+              display: { xs: 'none', md: 'flex' },
               padding: '15px',
               borderRadius: '35px',
               backgroundColor: 'white',
+              boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', // Subtle box shadow
             }}
           >
             {navLinks.map((link, index) => (
@@ -67,7 +69,7 @@ export default function Navbar({ toggleDrawer }) {
           <IconButton
             onClick={() => toggleDrawer(true)}
             sx={{
-              display: { xs: 'flex', sm: 'none' },
+              display: { xs: 'flex', md: 'none' },
               color: 'black',
             }}
           >
@@ -77,4 +79,4 @@ export default function Navbar({ toggleDrawer }) {
       </AppBar>
     </Container>
   );
-}
+} 

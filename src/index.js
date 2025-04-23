@@ -7,9 +7,18 @@ import AboutUs from './Pages/AboutUs';
 import ContactUs from './Pages/ContactUs';
 import LogIn from './Pages/LogIn';
 import Notifications from './Pages/Notifications';
+import ForgotPassword from './Pages/ForgotPassword';
 import SignUp from './Pages/SignUp';
 import MyPlants from './Pages/MyPlants';
 import Layout from './Components/HomepageComponent/Layout';
+import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
+
+// Create a custom theme with DM Sans
+const theme = createTheme({
+  typography: {
+    fontFamily: 'DM Sans, sans-serif', // Set DM Sans as the default font
+  },
+});
 
 const router = createBrowserRouter([
   {
@@ -41,9 +50,14 @@ const router = createBrowserRouter([
         path: "notifications", // "/notifications"
         element: <Notifications />,
       },
+      
       {
         path: "myplants", // "/myplants"
         element: <MyPlants />,
+      },
+      {
+        path: "forgotPassword", // "/forgotPassword"
+        element: <ForgotPassword />,
       },
     ],
   },
@@ -52,6 +66,9 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <ThemeProvider theme={theme}>
+      <CssBaseline /> {/* Resets default browser styles */}
+      <RouterProvider router={router} />
+    </ThemeProvider>
   </React.StrictMode>
 );
