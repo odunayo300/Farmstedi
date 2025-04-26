@@ -1,13 +1,76 @@
 import React from 'react';
-import {Box,Container,Typography,Button,Card, CardContent, IconButton, Grid,Stack, Divider } from '@mui/material'
+import {
+    Box,
+    Container,
+    Typography,
+    Button,
+    Card,
+    CardContent,
+    IconButton,
+    Grid,
+    Stack,
+    Divider,
+    TextField,
+    InputAdornment,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,useMediaQuery, useTheme} from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import AgricultureIcon from '@mui/icons-material/Agriculture';
 import XIcon from '@mui/icons-material/X';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import CancelIcon from '@mui/icons-material/Cancel';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import { useState } from 'react';
 
 const Homepage = () => {
+
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // Detect mobile screens
+    const [isStarted, setIsStarted] = useState(false); // State to track if "Get Started" is clicked
+    const [generateMode, setGenerateMode] = useState('manual'); // 'manual' or 'automatic'
+    const [location, setLocation] = useState(''); // State to store the user's location
+    console.log(location)
+    // const [selectedSoil, setSelectedSoil] = useState(null); // Selected soil type
+    const [selectedCrops, setSelectedCrops] = useState([]); // Selected crops
+    console.log(selectedCrops)
+    // const soilTypes = [
+        // { id: 1, name: 'Clay', image: 'https://via.placeholder.com/50' },
+        // { id: 2, name: 'Sandy', image: 'https://via.placeholder.com/50' },
+        // { id: 3, name: 'Loamy', image: 'https://via.placeholder.com/50' },
+    //   ];
+    
+    const handleCropAdd = (event) => {
+        if (event.key === 'Enter' && event.target.value) {
+          setSelectedCrops([...selectedCrops, event.target.value]);
+          event.target.value = '';
+        }
+      };
+    
+      const handleCropRemove = () => {
+        setSelectedCrops([]);
+      };
+
+      const handleLocationClick = () => {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const { latitude, longitude } = position.coords;
+              setLocation(`Lat: ${latitude}, Long: ${longitude}`); // Update the location state
+            },
+            (error) => {
+              console.error('Error getting location:', error);
+              setLocation('Unable to retrieve location'); // Handle errors
+            }
+          );
+        } else {
+          setLocation('Geolocation is not supported by this browser'); // Handle unsupported browsers
+        }
+      };
 
      // Array of card data
   const cards = [
@@ -39,24 +102,38 @@ const Homepage = () => {
                     backgroundSize:'cover',
                     backgroundRepeat: 'no-repeat', // Prevents the image from repeating
                     backgroundPosition: 'center', // Centers the image
-                    minHeight: '600px', // Sets a minimum height
+                    minHeight: {xs:"1000px", md:"800px"}, // Sets a minimum height
                     width: '100%', // Sets the width to 100%
                     display: 'flex', // Allows content to be flexibly aligned
-                    justifyContent: 'center', // Centers content horizontally
-                    alignItems: 'center', // Centers content vertically
-                    
+                    alignItems:'center',
+                    justifyContent:'space-between'
                 }}
              >
                
                <Container  maxWidth="lg">
-                    <Box>
-                        <Box>
-                            <Typography variant="h3" mb={3}>
-                                Discover the perfect plants for your Land
+                    <Box sx={{display:"flex",flexDirection:{xs:"column", md: "row"},gap: { xs: 4, md: 8 }, justifyContent:"space-between", alignItems:"center"}}>
+                        <Box sx={{
+                            flex: { xs: 'none', md: 1 }, // Allow the form box to grow more on larger screens
+                            textAlign: {xs:"left", md:"left" }, // Center text on smaller screens
+                        }}>
+                            <Typography 
+                            variant="h3" 
+                            mb={3}
+                            sx={{lineHeight:1.5,
+                                whiteSpace: 'break-spaces', // Allows text to break into multiple lines
+                               wordBreak:'break-word', // Ensures long words break properly
+                               fontweight: 'bold',
+                               fontSize: { xs: '2rem', md: '3rem' }, // Responsive font size
+                            }}>
+                                Discover the <br/>
+                               perfect plants for your Land
                             </Typography>
+                        
+
                             <Button
                             variant="outlined"
                             sx={{
+                                display:{xs:"none", md:"block"},
                                 borderColor: '#68C34C', // Border color
                                 color: '#68C34C', // Text color
                                 textTransform: 'none', // Prevents uppercase transformation
@@ -68,11 +145,189 @@ const Homepage = () => {
                                 color: 'white', // White text on hover
                                 },
                             }}
+                            onClick={() => setIsStarted(true)} // Set the state to true when clicked
                             >
                             Get Started
                             </Button>
+                           
                         </Box>
-                        
+                        <Box
+                             sx={{
+                                flex: { xs: 'none', md: 2 }, // Allow the form box to grow more on larger screens
+                                backgroundColor: 'white',
+                                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+                                borderRadius: '12px',
+                                padding: '20px',
+                                maxWidth: {xs:"100%", md:"500px"},
+                                margin: '0 auto',
+                                mt: 4,
+                                overflow: 'hidden', // Prevents overflow
+                                width: '100%', // Sets width to 100%
+                                border: isStarted ? '2px solid #68C34C' : 'none', // Add green border if "Get Started" is clicked
+                              }}
+                        >
+                             <Stack direction="row" spacing={2} mb={3} sx={{backgroundColor: '#f5f8f9', padding: '10px', borderRadius: '20px'}}>
+                                <Button
+                                variant="contained"
+                                sx={{
+                                    backgroundColor: generateMode === 'manual' ? 'black' : '#f5f8f9',
+                                    color: generateMode === 'manual' ? 'white' : 'black',
+                                    textTransform: 'none',
+                                    flex: 1,
+                                    borderRadius: '20px',
+                                }}
+                                onClick={() => setGenerateMode('manual')}
+                                
+                                >
+                                {isMobile ? 'Manually' : 'Generate Manually'}
+                                </Button>
+                                <Button
+                                variant="contained"
+                                sx={{
+                                    backgroundColor: generateMode === 'automatic' ? 'black' : '#f5f8f9',
+                                    color: generateMode === 'automatic' ? 'white' : 'black',
+                                    textTransform: 'none',
+                                    flex: 1,
+                                    borderRadius: '20px',
+                                }}
+                                onClick={() => setGenerateMode('automatic')}
+                                >
+                                 {isMobile ? 'Automatically' : 'Generate Automatically'}
+                                </Button>
+                             </Stack>
+                             {/* form field */}
+                            <form>
+                                 {/* GPS Location Field */}
+                                <TextField
+                                fullWidth
+                                label="Select your location"
+                                placeholder="Enter GPS location"
+                                value={location} // Set the value to the location state
+                                onClick={handleLocationClick} // Call the function to get location
+                                readOnly // Make the field read-only
+                                InputProps={{
+                                    endAdornment: (
+                                    <InputAdornment position="end">
+                                        <LocationOnIcon />
+                                    </InputAdornment>
+                                    ),
+                                }}
+                                sx={{ backgroundColor: '#f5f8f9', mb: 3,borderRadius:"20px"}}
+                                />
+
+                                  {/* Available Space Field */}
+                                <TextField
+                                fullWidth
+                                label="Available Space"
+                                placeholder="Enter space"
+                                sx={{ backgroundColor: '#f5f8f9', mb: 3, borderRadius:"20px" }}
+                               />
+                               {/* select Crops field(only for manual mode) */}
+                               {generateMode === 'manual' &&(
+                                 <Box sx={{ mb: 3 }}>
+                                 <TextField
+                                   fullWidth
+                                   label="Select Crops"
+                                   placeholder="Type and press Enter"
+                                   onKeyDown={handleCropAdd}
+                                   sx={{ backgroundColor: '#f5f8f9', mb: 1 }}
+                                 />
+                                  <Stack direction="row" spacing={1}>
+                                    {selectedCrops.map((crop, index) => (
+                                        <Typography
+                                        key={index}
+                                        sx={{
+                                            backgroundColor: '#f5f8f9',
+                                            padding: '5px 10px',
+                                            borderRadius: '20px',
+                                            border: '1px solid #68C34C',
+                                        }}
+                                        >
+                                        {crop}
+                                        </Typography>
+                                    ))}
+                                     {selectedCrops.length > 0 && (
+                                        <IconButton onClick={handleCropRemove}>
+                                        <CancelIcon />
+                                        </IconButton>
+                                    )}
+                                    </Stack>
+          </                        Box>                          
+                                 )}
+                               {/* Select Date and Year */}
+                               <Box sx={{ mb: 3 }}>
+                                    <Typography variant="body1" mb={1}>
+                                        The date you want to plant
+                                    </Typography>
+                                    <Stack direction="row" spacing={2}>
+                                        {/* Select Date */}
+                                        <FormControl fullWidth sx={{ backgroundColor: '#f5f8f9' }}>
+                                        <InputLabel>Select Date</InputLabel>
+                                        <Select>
+                                            <MenuItem value="01-12">01 December</MenuItem>
+                                            <MenuItem value="15-12">15 December</MenuItem>
+                                            <MenuItem value="01-01">01 January</MenuItem>
+                                        </Select>
+                                        </FormControl>
+
+                                        {/* Select Year */}
+                                        <FormControl fullWidth sx={{ backgroundColor: '#f5f8f9' }}>
+                                        <InputLabel>Select Year</InputLabel>
+                                        <Select>
+                                            <MenuItem value="2023">2023</MenuItem>
+                                            <MenuItem value="2024">2024</MenuItem>
+                                            <MenuItem value="2025">2025</MenuItem>
+                                        </Select>
+                                        </FormControl>
+                                    </Stack>
+                                </Box>
+                                
+                                {/* available resurces */}
+                    
+                                <Typography variant="body1" mb={1}>
+                                Available Resources
+                                </Typography>
+                                <Stack direction="row" spacing={2} mb={3}>
+                                {/* Watering Services */}
+                                   
+                                    <Stack direction="row" alignItems="center" spacing={1}>
+                                        <IconButton sx={{ color: '#68C34C' }}>
+                                        <CheckBoxIcon/> {/* Replace with a watering icon if available */}
+                                        </IconButton>
+                                        <Typography variant="body2">Watering Services</Typography>
+                                    </Stack>
+
+                                {/* Fertilizer */}
+                                    <Stack direction="row" alignItems="center" spacing={1}>
+                                        <IconButton sx={{ color: '#68C34C' }}>
+                                        <CheckBoxIcon /> {/* Replace with a fertilizer icon if available */}
+                                        </IconButton>
+                                        <Typography variant="body2">Fertilizer</Typography>
+                                    </Stack>
+
+                                {/* Manual */}
+                                    <Stack direction="row" alignItems="center" spacing={1}>
+                                        <IconButton sx={{ color: '#68C34C' }}>
+                                        <CheckBoxIcon/> {/* Replace with a manual icon if available */}
+                                        </IconButton>
+                                        <Typography variant="body2">Manual</Typography>
+                                    </Stack>
+                                </Stack>
+
+                              {/* Submit Button */}
+                                <Button
+                                variant="contained"
+                                sx={{
+                                    backgroundColor: '#68C34C',
+                                    color: 'white',
+                                    textTransform: 'none',
+                                    borderRadius:"20px"
+                                }}
+                                >
+                                Find Plant
+                                </Button>
+                            </form>
+                        </Box>
 
                     </Box>
                 </Container>
