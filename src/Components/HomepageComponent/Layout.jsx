@@ -4,6 +4,7 @@ import { Box, CssBaseline } from '@mui/material';
 import Navbar from './Navbar';
 import SideNav from './SideNav';
 
+
 export default function Layout() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const location = useLocation(); // Get the current path
