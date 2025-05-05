@@ -73,7 +73,7 @@ export default function Navbar({ toggleDrawer }) {
               color: 'black',
             }}
           >
-            <MenuIcon />
+            <MenuIcon sx={{ fontSize: '2.5rem' }}/>
           </IconButton>
         </Toolbar>
       </AppBar>
