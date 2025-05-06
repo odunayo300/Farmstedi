@@ -15,14 +15,17 @@ import {
     FormControl,
     InputLabel,
     Select,
+    Alert,
     MenuItem,useMediaQuery, useTheme} from '@mui/material'
+import backgroundImage from '../assets/9ab47bfefd2ea90ea7a51f333ee292a171af4219.png'   
 import SearchIcon from '@mui/icons-material/Search';
+import gridImage from '../assets/farmstediImage1.png'
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import AgricultureIcon from '@mui/icons-material/Agriculture';
 import XIcon from '@mui/icons-material/X';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
+import MyLocationIcon from '@mui/icons-material/MyLocation';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { useState } from 'react';
@@ -33,23 +36,17 @@ const Homepage = () => {
     const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // Detect mobile screens
     const [isStarted, setIsStarted] = useState(false); // State to track if "Get Started" is clicked
     const [generateMode, setGenerateMode] = useState('manual'); // 'manual' or 'automatic'
+    const [plantDate, setPlantDate] = useState(''); // State for year
+    const [plantYear, setPlantYear] = useState(''); // State for year
+    const [soilType, setSoilType] = useState(''); // State for soil type 
     const [location, setLocation] = useState(''); // State to store the user's location
-    console.log(location)
-    // const [selectedSoil, setSelectedSoil] = useState(null); // Selected soil type
+    const[area, setArea] = useState('')
+  
+
     const [selectedCrops, setSelectedCrops] = useState([]); // Selected crops
-    console.log(selectedCrops)
-    // const soilTypes = [
-        // { id: 1, name: 'Clay', image: 'https://via.placeholder.com/50' },
-        // { id: 2, name: 'Sandy', image: 'https://via.placeholder.com/50' },
-        // { id: 3, name: 'Loamy', image: 'https://via.placeholder.com/50' },
-    //   ];
-    
-    const handleCropAdd = (event) => {
-        if (event.key === 'Enter' && event.target.value) {
-          setSelectedCrops([...selectedCrops, event.target.value]);
-          event.target.value = '';
-        }
-      };
+    const [alertMessage, setAlertMessage] = useState(null); // Alert message
+    const [alertType, setAlertType] = useState('success'); // Alert type ('success' or 'error')
+  
     
       const handleCropRemove = () => {
         setSelectedCrops([]);
@@ -93,16 +90,72 @@ const Homepage = () => {
       text: 'Choose your plants and personalized care tips, including watering schedules and growth tracking, to ensure a thriving cultivation experience.',
     },
   ];
+
+    const handleSubmit = async (event) =>{
+
+        event.preventDefault();
+
+         // Extract latitude and longitude from location
+              const [latitude, longitude] = location
+              .replace('Lat: ', '')
+              .replace('Long: ', '')
+              .split(', ')
+              .map((coord) => parseFloat(coord.split(': ')[1]));
+
+        const plantingDate = `${plantYear}-${plantDate}`;
+
+       // Prepare the data payload
+        const data = {
+          latitude, // Numeric latitude
+          longitude, // Numeric longitude
+          soilType,
+          plantingDate: plantingDate,
+          area,
+          plants:selectedCrops,
+        };
+
+        console.log('Data being sent to backend:', data);
+            
+              try {
+                const response = await fetch('http://localhost:3000/api/v1/plant/recommend', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(data),
+                });
+            
+                console.log('Response status:', response.status);
+                
+                const responseBody = await response.json();
+                console.log('Response body:', responseBody);
+            
+                if (response.ok) {
+                  setAlertMessage('Form submitted successfully!');
+                  setAlertType('success');
+                  // Handle the recommendation response here
+                  console.log('Recommendations:', responseBody);
+                }
+              } catch (error) {
+                setAlertMessage('Submission failed. Please retry.');
+                setAlertType('error');
+              }
+            
+              // Clear the alert message after 4 seconds
+              setTimeout(() => {
+                setAlertMessage(null);
+              }, 4000);
+    }
     return (
         <Box>
              {/* showcase section */}
              <Box
                 sx={{
-                    backgroundImage:'url(https://s3-alpha-sig.figma.com/img/9ab4/7bfe/fd2ea90ea7a51f333ee292a171af4219?Expires=1745798400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=XWOjlJOW8B9sUri3Fp4A4oGdwfvwD26CC5xhnEOHtvDfQf~JlNZqVGl1p27l17IcQmGFupbCUcp3GzLtvWb21prT5NGOvfxQT9IlAIr5PbE7X~2~IqFwiZcJ6gypc3oVVoi7yzzaav1DI8felIJHjw45h3ZDmGE5ylwwn2pAsn-tOkaNkL4KWfW7aAaa62VsIDmXE81syrybYnA6Fau0Y9V4q-RE6UiALlofZK7ROXkVuzTO33jqUT~QCa2XowXPPYSqodWTAimHTLktmMNE~COFWxPxeSW~GofCXHPrSJGtOfFMf32ChspfufQFNJbz8~6GjkjY6oiELHmvssS1EQ__)',
+                    backgroundImage:`url(${backgroundImage})`,
                     backgroundSize:'cover',
                     backgroundRepeat: 'no-repeat', // Prevents the image from repeating
                     backgroundPosition: 'center', // Centers the image
-                    minHeight: {xs:"1000px", md:"800px"}, // Sets a minimum height
+                    minHeight: {xs:"1100px", md:"900px"}, // Sets a minimum height
                     width: '100%', // Sets the width to 100%
                     display: 'flex', // Allows content to be flexibly aligned
                     alignItems:'center',
@@ -111,6 +164,12 @@ const Homepage = () => {
              >
                
                <Container  maxWidth="lg">
+                      {/* Alert Message */}
+                    {alertMessage && (
+                    <Alert severity={alertType} sx={{ mb: 2 }}>
+                        {alertMessage}
+                    </Alert>
+                    )}
                     <Box sx={{display:"flex",flexDirection:{xs:"column", md: "row"},gap: { xs: 4, md: 8 }, justifyContent:"space-between", alignItems:"center"}}>
                         <Box sx={{
                             flex: { xs: 'none', md: 1 }, // Allow the form box to grow more on larger screens
@@ -122,7 +181,7 @@ const Homepage = () => {
                             sx={{lineHeight:1.5,
                                 whiteSpace: 'break-spaces', // Allows text to break into multiple lines
                                wordBreak:'break-word', // Ensures long words break properly
-                               fontweight: 'bold',
+                               fontweight: 'bolder',
                                fontSize: { xs: '2rem', md: '3rem' }, // Responsive font size
                             }}>
                                 Discover the <br/>
@@ -196,7 +255,7 @@ const Homepage = () => {
                                 </Button>
                              </Stack>
                              {/* form field */}
-                            <form>
+                            <form onSubmit={handleSubmit}>
                                  {/* GPS Location Field */}
                                 <TextField
                                 fullWidth
@@ -204,11 +263,11 @@ const Homepage = () => {
                                 placeholder="Enter GPS location"
                                 value={location} // Set the value to the location state
                                 onClick={handleLocationClick} // Call the function to get location
-                                readOnly // Make the field read-only
+                               
                                 InputProps={{
                                     endAdornment: (
                                     <InputAdornment position="end">
-                                        <LocationOnIcon />
+                                        <MyLocationIcon sx={{color:"red"}} />
                                     </InputAdornment>
                                     ),
                                 }}
@@ -217,6 +276,9 @@ const Homepage = () => {
 
                                   {/* Available Space Field */}
                                 <TextField
+                                type = "number"
+                                value={area}
+                                onChange={(e) => setArea(Number(e.target.value))} 
                                 fullWidth
                                 label="Available Space"
                                 placeholder="Enter space"
@@ -229,7 +291,15 @@ const Homepage = () => {
                                    fullWidth
                                    label="Select Crops"
                                    placeholder="Type and press Enter"
-                                   onKeyDown={handleCropAdd}
+                                   onKeyDown={(event) => {
+                                    if (event.key === 'Enter') {
+                                      event.preventDefault(); // Prevent form submission
+                                      if (event.target.value) {
+                                        setSelectedCrops([...selectedCrops, event.target.value]);
+                                        event.target.value = ''; // Clear the input field
+                                      }
+                                    }
+                                  }}
                                    sx={{ backgroundColor: '#f5f8f9', mb: 1 }}
                                  />
                                   <Stack direction="row" spacing={1}>
@@ -263,7 +333,10 @@ const Homepage = () => {
                                         {/* Select Date */}
                                         <FormControl fullWidth sx={{ backgroundColor: '#f5f8f9' }}>
                                         <InputLabel>Select Date</InputLabel>
-                                        <Select>
+                                        <Select
+                                            value={plantDate}
+                                            onChange={(e) =>{setPlantDate(e.target.value)}}
+                                        >
                                             <MenuItem value="01-12">01 December</MenuItem>
                                             <MenuItem value="15-12">15 December</MenuItem>
                                             <MenuItem value="01-01">01 January</MenuItem>
@@ -273,7 +346,10 @@ const Homepage = () => {
                                         {/* Select Year */}
                                         <FormControl fullWidth sx={{ backgroundColor: '#f5f8f9' }}>
                                         <InputLabel>Select Year</InputLabel>
-                                        <Select>
+                                        <Select
+                                            value={plantYear}
+                                            onChange={(e)=>{setPlantYear(e.target.value)}}
+                                        >
                                             <MenuItem value="2023">2023</MenuItem>
                                             <MenuItem value="2024">2024</MenuItem>
                                             <MenuItem value="2025">2025</MenuItem>
@@ -281,6 +357,16 @@ const Homepage = () => {
                                         </FormControl>
                                     </Stack>
                                 </Box>
+                                <FormControl fullWidth sx={{ backgroundColor: '#f5f8f9', mb: 3, borderRadius: '20px' }}>
+                                    <InputLabel>Select Soil Type</InputLabel>
+                                    <Select
+                                    value={soilType}
+                                     onChange={(e) => {setSoilType(e.target.value)}}>
+                                        <MenuItem value="clay">Clay</MenuItem>
+                                        <MenuItem value="loamy">Loamy</MenuItem>
+                                        <MenuItem value="sandy">Sandy</MenuItem>
+                                    </Select>
+                                </FormControl>
                                 
                                 {/* available resurces */}
                     
@@ -316,6 +402,7 @@ const Homepage = () => {
 
                               {/* Submit Button */}
                                 <Button
+                                type='submit'
                                 variant="contained"
                                 sx={{
                                     backgroundColor: '#68C34C',
@@ -332,6 +419,115 @@ const Homepage = () => {
                     </Box>
                 </Container>
              </Box>
+
+             {/* what we do section */}
+            <Container maxWidth="lg" sx={{ mt: 8, mb: 8 }}>
+                <Typography variant="h5" fontWeight="bold" textAlign="center" mb={4}>
+                    What We Do?
+                </Typography>
+                <Box
+                    sx={{
+                    display: 'flex',
+                    flexDirection: { xs: 'column', md: 'row' }, // Responsive layout
+                    gap: 4,
+                    alignItems: 'stretch', // Ensures both boxes stretch to the same height
+                    }}
+                >
+                    {/* Left Box: Grid of Images */}
+                    <Box
+                    sx={{
+                        flex: 1,
+                        display: 'grid',
+                        gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, // Responsive grid
+                        gridTemplateRows: { md: '1fr 1fr' },
+                        gap: 2,
+                        height: '100%'
+                    }}
+                    >
+                    <Box
+                        sx={{
+                        gridColumn: { md: 'span 2' }, // Full width on large screens
+                        height: { xs: '200px', md: '300px' },
+                        backgroundImage: `url(${gridImage})`, // Replace with your image path
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        borderRadius: '12px',
+                        }}
+                    />
+                    <Box
+                        sx={{
+                        height: { xs: '150px', md: '150px' },
+                        backgroundImage: `url(${gridImage})`, // Replace with your image path
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        borderRadius: '12px',
+                        }}
+                    />
+                    <Box
+                        sx={{
+                        height: { xs: '150px', md: '150px' },
+                        backgroundImage: `url(${gridImage})`, // Replace with your image path
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        borderRadius: '12px',
+                        }}
+                    />
+                    </Box>
+
+                    {/* Right Box: Text and List */}
+                    <Box
+                    sx={{
+                        flex: 1,
+                        backgroundColor: '#F6F9F5',
+                        padding: 4,
+                        borderRadius: '12px',
+                         height: '100%',
+                        
+                    }}
+                    >
+                    <Typography variant="body1" fontWeight="400" mb={3}>
+                        Farmstedi help farmers and plant lovers determine the right crops
+                        to grow, track plant health, monitor weather conditions, and optimise 
+                        watering habit. It blends AI-based recommendations, weather integration
+                        and personal dashboard for modern responsive plant care.
+                    </Typography>
+                    <ul style={{ paddingLeft: '20px', marginBottom: '25px' }}>
+                        <li style={{ color: '#68C34C', fontWeight: 'bold', marginBottom: '8px',  }}>
+                         User-centric Dashboard
+                        </li>
+                        <li style={{ color: '#68C34C', fontWeight: 'bold', marginBottom: '8px',  }}>
+                        Weather Integration
+                        </li>
+                        <li style={{ color: '#68C34C', fontWeight: 'bold', marginBottom: '8px', }}>
+                        Smart plant matching
+                        </li>
+                        <li style={{ color: '#68C34C', fontWeight: 'bold', marginBottom: '8px',  }}>
+                        Mobile-Ready & Scalable
+                        </li>
+                        <li style={{ color: '#68C34C', fontWeight: 'bold', marginBottom: '8px',  }}>
+                         Intuitive Design
+                        </li>
+                    </ul>
+                    <Button
+                        variant="outlined"
+                        sx={{
+                        borderColor: '#68C34C',
+                        color: '#68C34C',
+                        textTransform: 'none',
+                        fontSize: '0.875rem',
+                        padding: '6px 25px',
+                        borderRadius: '30px',
+                        '&:hover': {
+                            backgroundColor: '#68C34C',
+                            color: 'white',
+                        },
+                        }}
+                    >
+                        Get Started
+                    </Button>
+                    </Box>
+                </Box>
+            </Container>
              {/* how it works section */}
              <Container maxWidth="lg" sx={{ mt: 8, mb: 8 }}>
                 <Typography variant="h5" fontWeight="bold" textAlign="center" mb={4}>

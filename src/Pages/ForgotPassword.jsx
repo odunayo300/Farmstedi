@@ -8,7 +8,7 @@ import {
   Stack,
   Box,
 } from "@mui/material";
-import CustomButton from "../Components/CustomButton";
+import CustomButton from "../Components/CustomButton/CustomButton";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
