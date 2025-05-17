@@ -54,7 +54,6 @@ const Homepage = () => {
     const [isSignedUp, setIsSignedUp] = useState(true); // Placeholder for sign-up status
     const [showSignUpModal, setShowSignUpModal] = useState(false); // Modal visibility state
     const [plantData, setPlantData] = useState(null);  // The data recieved from backend that includes recommendations of plant to  be displayed in frontend
-    console.log(setIsSignedUp)
     const handleCropRemove = () => {
         setSelectedCrops([]);
       };
@@ -141,10 +140,9 @@ const Homepage = () => {
                   },
                   body: JSON.stringify(data),
                 });
-            
-                console.log('Response status:', response.status);
 
                 const responseBody = await response.json();
+                
                 console.log('Response body:', responseBody);
                 if (response.ok) {
                   // Handle the recommendation response here

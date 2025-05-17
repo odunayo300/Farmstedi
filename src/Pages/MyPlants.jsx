@@ -41,7 +41,7 @@ const MyPlants = () => {
       >
         <ConstructionIcon sx={{ fontSize: 80, color: '#68C34C', mb: 2 }} />
         <Typography variant="h4" gutterBottom sx={{ color: '#333' }}>
-          My plants page Under Construction
+          My plant Under Construction
         </Typography>
         <Typography variant="body1" sx={{ color: '#555', mb: 4 }}>
           Relax, you'll know more about <strong>Farmstedi</strong> soon.
