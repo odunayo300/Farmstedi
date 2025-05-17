@@ -6,7 +6,6 @@ import NotFoundPage from './Pages/NotFoundPage';
 import AboutUs from './Pages/AboutUs';
 import ContactUs from './Pages/ContactUs';
 import LogIn from './Pages/LogIn';
-import Notifications from './Pages/Notifications';
 import ForgotPassword from './Pages/ForgotPassword';
 import SignUp from './Pages/SignUp';
 import MyPlants from './Pages/MyPlants';
@@ -45,10 +44,6 @@ const router = createBrowserRouter([
       {
         path: "signup", // "/signup"
         element: <SignUp />,
-      },
-      {
-        path: "notifications", // "/notifications"
-        element: <Notifications />,
       },
       
       {

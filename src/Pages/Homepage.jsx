@@ -16,7 +16,11 @@ import {
     InputLabel,
     Select,
     Alert,
-    MenuItem,useMediaQuery, useTheme} from '@mui/material'
+    MenuItem,
+    useMediaQuery,
+    useTheme,Backdrop,
+    CircularProgress } from '@mui/material'
+import UserAuthenticated from '../Components/HomepageComponent/UserAuthenticated'
 import backgroundImage from '../assets/9ab47bfefd2ea90ea7a51f333ee292a171af4219.png'   
 import SearchIcon from '@mui/icons-material/Search';
 import gridImage from '../assets/farmstediImage1.png'
@@ -29,6 +33,7 @@ import MyLocationIcon from '@mui/icons-material/MyLocation';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { useState } from 'react';
+import RecommendedPlants from '../Components/HomepageComponent/Recommended_page';
 
 const Homepage = () => {
 
@@ -42,13 +47,15 @@ const Homepage = () => {
     const [location, setLocation] = useState(''); // State to store the user's location
     const[area, setArea] = useState('')
   
-
+    const [isLoading, setIsLoading] = useState(false)
     const [selectedCrops, setSelectedCrops] = useState([]); // Selected crops
     const [alertMessage, setAlertMessage] = useState(null); // Alert message
     const [alertType, setAlertType] = useState('success'); // Alert type ('success' or 'error')
-  
-    
-      const handleCropRemove = () => {
+    const [isSignedUp, setIsSignedUp] = useState(true); // Placeholder for sign-up status
+    const [showSignUpModal, setShowSignUpModal] = useState(false); // Modal visibility state
+    const [plantData, setPlantData] = useState(null);  // The data recieved from backend that includes recommendations of plant to  be displayed in frontend
+    console.log(setIsSignedUp)
+    const handleCropRemove = () => {
         setSelectedCrops([]);
       };
 
@@ -95,12 +102,21 @@ const Homepage = () => {
 
         event.preventDefault();
 
+        if (!isSignedUp) {
+            // If the user is not signed up, show the sign-up modal
+            setShowSignUpModal(true);
+            return;
+          }
+
          // Extract latitude and longitude from location
-              const [latitude, longitude] = location
-              .replace('Lat: ', '')
-              .replace('Long: ', '')
-              .split(', ')
-              .map((coord) => parseFloat(coord.split(': ')[1]));
+              let latitude = null, longitude = null;
+                if (location.startsWith('Lat: ') && location.includes(', Long: ')) {
+                [latitude, longitude] = location
+                    .replace('Lat: ', '')
+                    .replace('Long: ', '')
+                    .split(', ')
+                    .map(Number);
+                }
 
         const plantingDate = `${plantYear}-${plantDate}`;
 
@@ -115,9 +131,10 @@ const Homepage = () => {
         };
 
         console.log('Data being sent to backend:', data);
-            
+
+                setIsLoading(true); //show backdrop, loading state
               try {
-                const response = await fetch('http://localhost:3000/api/v1/plant/recommend', {
+                const response = await fetch('https://farmstedi.onrender.com/api/v1/plant/recommend', {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
@@ -126,29 +143,46 @@ const Homepage = () => {
                 });
             
                 console.log('Response status:', response.status);
-                
+
                 const responseBody = await response.json();
                 console.log('Response body:', responseBody);
-            
                 if (response.ok) {
-                  setAlertMessage('Form submitted successfully!');
-                  setAlertType('success');
                   // Handle the recommendation response here
-                  console.log('Recommendations:', responseBody);
+                  setPlantData(responseBody.data)
                 }
               } catch (error) {
                 setAlertMessage('Submission failed. Please retry.');
                 setAlertType('error');
+              }finally{
+                setIsLoading(false)
               }
             
               // Clear the alert message after 4 seconds
               setTimeout(() => {
                 setAlertMessage(null);
-              }, 4000);
+              }, 10000);
     }
     return (
         <Box>
-             {/* showcase section */}
+            {/* conditional rendering for displaying recommendations when the recommended plant is already available */}
+            {plantData ? 
+             <RecommendedPlants plantData = {plantData}/> :
+             <>
+                {/* Backdrop for Loading State */}
+                <Backdrop
+                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    open={isLoading}
+                >
+                    <CircularProgress color="inherit" />
+                </Backdrop>
+             
+              {/* Sign-Up Modal */}
+                <UserAuthenticated
+                    showSignUpModal={showSignUpModal}
+                    setShowSignUpModal={setShowSignUpModal}
+                />
+
+                {/* showcase section */}
              <Box
                 sx={{
                     backgroundImage:`url(${backgroundImage})`,
@@ -337,9 +371,9 @@ const Homepage = () => {
                                             value={plantDate}
                                             onChange={(e) =>{setPlantDate(e.target.value)}}
                                         >
-                                            <MenuItem value="01-12">01 December</MenuItem>
-                                            <MenuItem value="15-12">15 December</MenuItem>
-                                            <MenuItem value="01-01">01 January</MenuItem>
+                                            <MenuItem value="12-01">December 01</MenuItem>
+                                            <MenuItem value="12-15"> December 15</MenuItem>
+                                            <MenuItem value="01-01"> January 01</MenuItem>
                                         </Select>
                                         </FormControl>
 
@@ -533,7 +567,7 @@ const Homepage = () => {
                 <Typography variant="h5" fontWeight="bold" textAlign="center" mb={4}>
                   How It Works?
                 </Typography>
-                <Grid container spacing={4} justifyContent={'center'}>
+                <Grid container spacing={6} justifyContent={'center'}>
                     {cards.map((card) => (
                     <Grid item xs={12} sm={6} md={4} key={card.id}>
                         <Card
@@ -669,6 +703,8 @@ const Homepage = () => {
                 </Stack>
                 </Container>
             </Box>
+            </>
+            }
         </Box>
     );
 };

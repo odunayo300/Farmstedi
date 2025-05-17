@@ -1,31 +1,25 @@
 import React from "react";
 import { Box, Typography, Card, Button, Avatar, Stack } from "@mui/material";
-import { FaFilter } from "react-icons/fa";
-import CornImage from '../../assets/corn-image.png'; // Local image  --Charles
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import RecommendDetails from "./RecommendDetails";
+import { useState } from "react";
 
-const plantData = [
-  { name: "Maize", suitability: "85%", growthPeriod: "6 Months", image: CornImage },
-  { name: "Maize", suitability: "85%", growthPeriod: "6 Months", image: CornImage },
-  { name: "Maize", suitability: "85%", growthPeriod: "6 Months", image: CornImage },
-  { name: "Maize", suitability: "85%", growthPeriod: "6 Months", image: CornImage },
-  { name: "Maize", suitability: "85%", growthPeriod: "6 Months", image: CornImage },
-  { name: "Maize", suitability: "85%", growthPeriod: "6 Months", image: CornImage },
-  { name: "Maize", suitability: "85%", growthPeriod: "6 Months", image: CornImage },
-  { name: "Maize", suitability: "85%", growthPeriod: "6 Months", image: CornImage },
-];
-
-const RecommendedPlants = () => {
+const RecommendedPlants = ({plantData}) => {
+  const [viewPlant,setViewPlant] = useState(false)
   return (
-    <Box p={4}>
-      <Typography variant="h5" fontWeight="bold" mb={2}>
+    <Box mt={10}>
+    {viewPlant? <RecommendDetails plantData={plantData}/> : 
+      <>
+        <Box p={4} mt={10} backgroundColor="#f6fbf8">
+      <Typography variant="h5" fontWeight="bold" >
         Recommended Plants– <span style={{ color: "#000" }}>5</span>
       </Typography>
 
       <Box display="flex" justifyContent="flex-end" gap={2} mb={3}>
-        <Button variant="outlined" startIcon={<FaFilter />}>
+        <Button variant="outlined" startIcon={<FilterAltIcon />} >
           Filter
         </Button>
-        <Button variant="outlined" startIcon={<FaFilter />}>
+        <Button variant="outlined" startIcon={<FilterAltIcon />} >
           Filter
         </Button>
       </Box>
@@ -46,7 +40,7 @@ const RecommendedPlants = () => {
             <Avatar
               variant="square"
               src={plant.image}
-              alt={plant.name}
+              alt={plant.plantName}
               sx={{
                 width: 80,
                 height: 80,
@@ -58,12 +52,12 @@ const RecommendedPlants = () => {
             />
             <Box flexGrow={1}>
               <Typography variant="h6" fontWeight="bold" gutterBottom>
-                {plant.name}
+                {plant.plantName}
               </Typography>
               <Typography>
                 Suitability:{" "}
                 <span style={{ color: "#2e7d32", fontWeight: 500 }}>
-                  {plant.suitability}
+                  {plant.suitabilityScore}
                 </span>
               </Typography>
               <Typography>
@@ -74,6 +68,7 @@ const RecommendedPlants = () => {
               </Typography>
             </Box>
             <Button
+              onClick={()=>{setViewPlant(true)}}
               variant="outlined"
               sx={{
                 borderRadius: "30px",
@@ -87,7 +82,11 @@ const RecommendedPlants = () => {
           </Card>
         ))}
       </Stack>
+
     </Box>
+      </>
+    }
+    </Box> 
   );
 };
 

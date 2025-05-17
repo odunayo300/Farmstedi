@@ -9,7 +9,6 @@ export default function SideNav({ open,toggleDrawer }) {
   const navLinks = [
     { label: 'Plant Finder', path: '/' },
     { label: 'My Plants', path: '/myplants' },
-    { label: 'Notifications', path: '/notifications' },
     { label: 'About Us', path: '/about' },
     { label: 'Log In', path: '/login' },
     { label: 'Sign Up', path: '/signup' },
