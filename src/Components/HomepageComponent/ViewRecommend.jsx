@@ -148,52 +148,7 @@ const ViewRecommend = ({ plantData }) => {
                       </AccordionSummary>
                       <AccordionDetails>{plant.phValue}</AccordionDetails>
                     </Accordion>
-                  </Grid>
-                  {/* Accordion 5 */}
-                  <Grid size={{xs:12,md:6}}>
-                      <Accordion>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                      <Typography component="span">Pests and Diseases</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <Typography fontWeight="bold">Diseases:</Typography>
-                      {plant.pestAndDiseases?.diseases?.length > 0 ? (
-                        plant.pestAndDiseases.diseases.map((disease, index) => (
-                          <div key={`disease-${index}`}>
-                            <Typography>Name: {disease.name}</Typography>
-                            <Typography>Mitigation: {disease.mitigation}</Typography>
-                          </div>
-                        ))
-                      ) : (
-                        <Typography>No diseases found.</Typography>
-                      )}
-
-                      <Typography fontWeight="bold" mt={2}>Pests:</Typography>
-                      {plant.pestAndDiseases?.pests?.length > 0 ? (
-                        plant.pestAndDiseases.pests.map((pest, index) => (
-                          <div key={`pest-${index}`}>
-                            <Typography>Name: {pest.name}</Typography>
-                            <Typography>Mitigation: {pest.mitigation}</Typography>
-                          </div>
-                        ))
-                      ) : (
-                        <Typography>No pests found.</Typography>
-                      )}
-                    </AccordionDetails>
-                   </Accordion>
-                  </Grid>     
-                  <Grid size={{xs:12,md:6}}>
-                    <Accordion>
-                      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                        <Typography component="span">Irrigation Details</Typography>
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        <Typography>Method: {plant.irrigation?.method || "N/A"}</Typography>
-                        <Typography>Schedule: {plant.irrigation?.schedule || "N/A"}</Typography>
-                        <Typography>Water Type: {plant.irrigation?.waterType || "N/A"}</Typography>
-                      </AccordionDetails>
-                    </Accordion>
-                  </Grid>         
+                  </Grid>            
                 </Grid>
               </Box>
             </Box>
