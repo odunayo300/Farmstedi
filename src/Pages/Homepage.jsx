@@ -51,7 +51,7 @@ const Homepage = () => {
     const [selectedCrops, setSelectedCrops] = useState([]); // Selected crops
     const [alertMessage, setAlertMessage] = useState(null); // Alert message
     const [alertType, setAlertType] = useState('success'); // Alert type ('success' or 'error')
-    const [isSignedUp, setIsSignedUp] = useState(true); // Placeholder for sign-up status
+    const [isSignedUp, _setIsSignedUp] = useState(true); // Placeholder for sign-up status
     const [showSignUpModal, setShowSignUpModal] = useState(false); // Modal visibility state
     const [plantData, setPlantData] = useState(null);  // The data recieved from backend that includes recommendations of plant to  be displayed in frontend
     const handleCropRemove = () => {
