@@ -12,7 +12,7 @@ const RecommendedPlants = ({plantData}) => {
       <>
           <Box p={4} mt={10} backgroundColor="#f6fbf8">
           <Typography variant="h5" fontWeight="bold" >
-            Recommended Plants– <span style={{ color: "#000" }}>5</span>
+            Recommended Plants
           </Typography>
 
           <Box display="flex" justifyContent="flex-end" gap={2} mb={3}>
@@ -58,12 +58,6 @@ const RecommendedPlants = ({plantData}) => {
                     Suitability:{" "}
                     <span style={{ color: "#2e7d32", fontWeight: 500 }}>
                       {plant.suitabilityScore}
-                    </span>
-                  </Typography>
-                  <Typography>
-                    Growth Period:{" "}
-                    <span style={{ color: "#2e7d32", fontWeight: 500 }}>
-                      {plant.growthPeriod}
                     </span>
                   </Typography>
                 </Box>

@@ -24,6 +24,8 @@ import UserAuthenticated from '../Components/HomepageComponent/UserAuthenticated
 import backgroundImage from '../assets/9ab47bfefd2ea90ea7a51f333ee292a171af4219.png'   
 import SearchIcon from '@mui/icons-material/Search';
 import gridImage from '../assets/farmstediImage1.png'
+import gridImage2 from '../assets/FarmstediImage2.jpg'
+import gridImage3 from '../assets/FarmstediImage3.jpg'
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import AgricultureIcon from '@mui/icons-material/Agriculture';
 import XIcon from '@mui/icons-material/X';
@@ -370,9 +372,19 @@ const Homepage = () => {
                                             value={plantDate}
                                             onChange={(e) =>{setPlantDate(e.target.value)}}
                                         >
-                                            <MenuItem value="12-01">December 01</MenuItem>
-                                            <MenuItem value="12-15"> December 15</MenuItem>
-                                            <MenuItem value="01-01"> January 01</MenuItem>
+                                            <MenuItem value="01-01">January </MenuItem>
+                                            <MenuItem value="02-01"> Febuary </MenuItem>
+                                            <MenuItem value="03-01"> March </MenuItem>
+                                            <MenuItem value="04-01"> April </MenuItem>
+                                            <MenuItem value="05-01"> May </MenuItem>
+                                            <MenuItem value="06-01"> June </MenuItem>
+                                            <MenuItem value="07-01"> July </MenuItem>
+                                            <MenuItem value="08-01"> August </MenuItem>
+                                            <MenuItem value="09-01"> September</MenuItem>
+                                            <MenuItem value="10-01"> October </MenuItem>
+                                            <MenuItem value="11-01"> November </MenuItem>
+                                            <MenuItem value="12-01"> December </MenuItem>
+
                                         </Select>
                                         </FormControl>
 
@@ -382,10 +394,9 @@ const Homepage = () => {
                                         <Select
                                             value={plantYear}
                                             onChange={(e)=>{setPlantYear(e.target.value)}}
-                                        >
-                                            <MenuItem value="2023">2023</MenuItem>
-                                            <MenuItem value="2024">2024</MenuItem>
+                                        >            
                                             <MenuItem value="2025">2025</MenuItem>
+                                             <MenuItem value="2026">2026</MenuItem>
                                         </Select>
                                         </FormControl>
                                     </Stack>
@@ -490,7 +501,7 @@ const Homepage = () => {
                     <Box
                         sx={{
                         height: { xs: '150px', md: '150px' },
-                        backgroundImage: `url(${gridImage})`, // Replace with your image path
+                        backgroundImage: `url(${gridImage2})`, // Replace with your image path
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
                         borderRadius: '12px',
@@ -499,7 +510,7 @@ const Homepage = () => {
                     <Box
                         sx={{
                         height: { xs: '150px', md: '150px' },
-                        backgroundImage: `url(${gridImage})`, // Replace with your image path
+                        backgroundImage: `url(${gridImage3})`, // Replace with your image path
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
                         borderRadius: '12px',
