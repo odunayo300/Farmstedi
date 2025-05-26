@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import {
   Box,
   Button,
@@ -6,15 +7,41 @@ import {
   Typography,
   Link as MuiLink,
   Paper,
+  Alert,
+  CircularProgress,
 } from "@mui/material";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const navigate = useNavigate();
 
-  const handleLogin = () => {
-    console.log("Logging in with:", { email, password });
+  const handleLogin = async () => {
+    setErrorMsg("");
+    setLoading(true);
+    try {
+      const response = await axios.post("https://farmstedi.onrender.com/api/v1/auth/signin", {
+        email,
+        password,
+      });
+
+      const { token, user } = response.data;
+
+      // Save token to localStorage
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      // Redirect to homepage
+      navigate("/");
+    } catch (error) {
+      console.error("Login failed:", error);
+      setErrorMsg(error.response?.data?.message || "Login failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -39,13 +66,14 @@ const Login = () => {
           Welcome Back
         </Typography>
 
+        {errorMsg && (
+          <Alert severity="error" sx={{ mb: 3 }}>
+            {errorMsg}
+          </Alert>
+        )}
+
         <Box mb={3}>
-          <Typography
-            variant="body2"
-            align="left"
-            color="textSecondary"
-            mb={1}
-          >
+          <Typography variant="body2" align="left" color="textSecondary" mb={1}>
             Email Address
           </Typography>
           <TextField
@@ -63,12 +91,7 @@ const Login = () => {
         </Box>
 
         <Box mb={1}>
-          <Typography
-            variant="body2"
-            align="left"
-            color="textSecondary"
-            mb={1}
-          >
+          <Typography variant="body2" align="left" color="textSecondary" mb={1}>
             Password
           </Typography>
           <TextField
@@ -101,6 +124,7 @@ const Login = () => {
           variant="contained"
           fullWidth
           onClick={handleLogin}
+          disabled={loading}
           sx={{
             bgcolor: "#72c561",
             color: "white",
@@ -113,7 +137,7 @@ const Login = () => {
             },
           }}
         >
-          Sign In
+          {loading ? <CircularProgress size={24} sx={{ color: "white" }} /> : "Sign In"}
         </Button>
       </Paper>
     </Box>
