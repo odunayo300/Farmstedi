@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+
 import {
   Box,
   Typography,
@@ -70,16 +72,60 @@ const CreateAccountForm = ({ setEmail, onNext }) => {
     return newErrors;
   };
 
-  const handleSubmit = () => {
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
+
+  const handleSubmit = async () => {
+  const validationErrors = validate();
+  if (Object.keys(validationErrors).length > 0) {
+    setErrors(validationErrors);
+    return;
+  }
+
+  const payload = {
+    firstname: formData.firstName,
+    lastname: formData.lastName,
+    email: formData.email,
+    password: formData.password,
+    confirmPassword: formData.confirmPassword,
+  };
+
+  try {
+    const response = await axios.post("https://farmstedi.onrender.com/api/v1/auth/signup", payload);
+    console.log("Account created successfully:", response.data);
 
     setEmail(formData.email);
-    onNext();
-  };
+    onNext(); 
+  } catch (error) {
+  console.error("Error creating account:", error);
+
+  if (error.response) {
+    const { status, data } = error.response;
+
+    let message = "An error occurred. Please try again.";
+
+    switch (status) {
+      case 400:
+        message = data.message || "Invalid input. Please check your form.";
+        break;
+      case 409:
+        message = data.message || "Account with this email exists";
+        break;
+      case 422:
+        message = data.message || "Invalid email format";
+        break;
+      case 500:
+        message = data.message || "Server error. Please try again later.";
+        break;
+      default:
+        message = data.message || message;
+    }
+
+    alert(message);
+  } else {
+    alert("Network error. Please check your internet connection.");
+  }
+}
+
+};
 
   return (
     <Box
